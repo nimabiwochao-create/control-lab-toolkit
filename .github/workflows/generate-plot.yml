@@ -1,0 +1,51 @@
+name: Generate motor plot
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_rpm:
+        description: Target motor speed in RPM
+        required: true
+        default: "1200"
+      load:
+        description: Motor load from 0.0 to 0.95
+        required: true
+        default: "0.10"
+      noise:
+        description: Sensor noise in RPM
+        required: true
+        default: "10"
+      seconds:
+        description: Simulation length in seconds
+        required: true
+        default: "4"
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run simulation and generate plot
+        run: |
+          PYTHONPATH=src python -m control_lab simulate \
+            --target-rpm "${{ inputs.target_rpm }}" \
+            --seconds "${{ inputs.seconds }}" \
+            --load "${{ inputs.load }}" \
+            --noise "${{ inputs.noise }}" \
+            --csv examples/run.csv \
+            --plot examples/run.svg
+
+      - name: Upload telemetry outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: motor-step-response
+          path: |
+            examples/run.csv
+            examples/run.svg

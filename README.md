@@ -57,6 +57,12 @@ python -m control_lab plot examples/run.csv --target-rpm 1200 --output examples/
 
 ![Motor step response](examples/run.svg)
 
+## Use From GitHub
+
+This repository includes a manual GitHub Actions workflow named
+`Generate motor plot`. It lets you generate a fresh CSV and SVG from the GitHub
+website by filling in target RPM, load, noise, and simulation length.
+
 ## Project Structure
 
 ```text

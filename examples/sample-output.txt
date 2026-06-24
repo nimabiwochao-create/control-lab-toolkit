@@ -1,0 +1,2 @@
+target_rpm=1200.0 final_rpm=1197.2 overshoot=0.7% settling_time=0.44s
+

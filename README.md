@@ -16,6 +16,7 @@ hardware-aware thinking.
 - Exponential moving average filter for noisy sensor readings
 - CLI experiment runner that exports telemetry to CSV
 - SVG step-response plots that render directly on GitHub
+- PID gain sweep reports for comparing tuning candidates
 - Unit tests for controller behavior and simulation stability
 - Arduino sketch showing how the same control loop maps to firmware
 
@@ -26,6 +27,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
 python -m control_lab simulate --target-rpm 1500 --seconds 4 --csv examples/run.csv --plot examples/run.svg
+python -m control_lab sweep --target-rpm 1500 --csv examples/sweep.csv
 python -m unittest
 ```
 
@@ -57,11 +59,29 @@ python -m control_lab plot examples/run.csv --target-rpm 1200 --output examples/
 
 ![Motor step response](examples/run.svg)
 
+## PID Sweep
+
+Compare several PID gain combinations and export a sorted tuning report:
+
+```bash
+python -m control_lab sweep \
+  --target-rpm 1200 \
+  --load 0.10 \
+  --kp 0.0008,0.0010,0.0012 \
+  --ki 0.0015,0.0020,0.0025 \
+  --kd 0.00004,0.00008 \
+  --csv examples/sweep.csv
+```
+
+The report is sorted by final error, overshoot, and settling time so the top row
+is a good first candidate for hardware testing.
+
 ## Use From GitHub
 
 This repository includes a manual GitHub Actions workflow named
 `Generate motor plot`. It lets you generate a fresh CSV and SVG from the GitHub
-website by filling in target RPM, load, noise, and simulation length.
+website by filling in target RPM, load, noise, and simulation length. It also
+uploads a PID sweep report as `sweep.csv`.
 
 ## Project Structure
 

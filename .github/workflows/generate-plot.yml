@@ -41,6 +41,11 @@ jobs:
             --noise "${{ inputs.noise }}" \
             --csv examples/run.csv \
             --plot examples/run.svg
+          PYTHONPATH=src python -m control_lab sweep \
+            --target-rpm "${{ inputs.target_rpm }}" \
+            --seconds "${{ inputs.seconds }}" \
+            --load "${{ inputs.load }}" \
+            --csv examples/sweep.csv
 
       - name: Upload telemetry outputs
         uses: actions/upload-artifact@v4
@@ -49,3 +54,4 @@ jobs:
           path: |
             examples/run.csv
             examples/run.svg
+            examples/sweep.csv
